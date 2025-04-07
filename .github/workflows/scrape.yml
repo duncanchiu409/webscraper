@@ -37,7 +37,7 @@ jobs:
         run: |
           touch src/.env
           echo AWS_REGION=${{ secrets.AWS_REGION }} >> src/.env
-          echo COIN_MARKET_CAP_TABLE_NAME="coinMarketCap-trend-ranking-table" >> src/.env
+          echo COIN_MARKET_CAP_TABLE_NAME="webscraper-coinmarketcap-trending-ranking-table" >> src/.env
           echo COIN_MARKET_CAP_URL="https://coinmarketcap.com/trending-cryptocurrencies/" >> src/.env
           echo TIMEZONE="Asia/Hong_Kong" >> src/.env
           
