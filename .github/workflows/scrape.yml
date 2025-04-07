@@ -45,7 +45,7 @@ jobs:
         run: pip install -r src/requirements.txt
         
       - name: Scrape CoinMarketCap
-        run: python src/coinMarketCap_webscraper.py
+        run: python src/coinmarketcap_webscraper.py
 
       - name: Stop Standalone-Chrome docker container
         run: docker stop $(docker ps -q) 
