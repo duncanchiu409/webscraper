@@ -1,4 +1,4 @@
-name: Scrape CoinMarketCap
+name: Scrape Trend Ranking Table
 
 on:
   workflow_dispatch:
@@ -80,8 +80,8 @@ jobs:
         run: |
           touch src/.env
           echo AWS_REGION=${{ secrets.AWS_REGION }} >> src/.env
-          echo COIN_MARKET_CAP_TABLE_NAME="webscraper-coingecko-trending-ranking-table" >> src/.env
-          echo COIN_MARKET_CAP_URL="https://www.coingecko.com/en/highlights/trending-crypto" >> src/.env
+          echo COIN_GECKO_TABLE_NAME="webscraper-coingecko-trending-ranking-table" >> src/.env
+          echo COIN_GECKO_URL="https://www.coingecko.com/en/highlights/trending-crypto" >> src/.env
           echo TIMEZONE="Asia/Hong_Kong" >> src/.env
           
       - name: Install dependencies
