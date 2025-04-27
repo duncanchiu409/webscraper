@@ -6,7 +6,7 @@ on:
     - cron: "15 8 * * *"
 
 jobs:
-  Scrape:
+  Scrape_CoinMarketCap:
     runs-on: ubuntu-latest
     environment: Credentials
     steps:
@@ -46,6 +46,49 @@ jobs:
         
       - name: Scrape CoinMarketCap
         run: python src/coinmarketcap_webscraper.py
+
+      - name: Stop Standalone-Chrome docker container
+        run: docker stop $(docker ps -q) 
+  Scrape_CoinGecko:
+    runs-on: ubuntu-latest
+    environment: Credentials
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Create credentials folder
+        run: mkdir src/credentials
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Pull Docker image
+        run: docker pull selenium/standalone-chrome:latest
+
+      - name: Start up Standalone-Chrome docker container
+        run: docker run -d -p 4444:4444 -p 7900:7900 --shm-size="2g" selenium/standalone-chrome:latest
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10.4'
+          architecture: 'x64'
+      
+      - name: Create .env file
+        run: |
+          touch src/.env
+          echo AWS_REGION=${{ secrets.AWS_REGION }} >> src/.env
+          echo COIN_MARKET_CAP_TABLE_NAME="webscraper-coingecko-trending-ranking-table" >> src/.env
+          echo COIN_MARKET_CAP_URL="https://www.coingecko.com/en/highlights/trending-crypto" >> src/.env
+          echo TIMEZONE="Asia/Hong_Kong" >> src/.env
+          
+      - name: Install dependencies
+        run: pip install -r src/requirements.txt
+        
+      - name: Scrape CoinMarketCap
+        run: python src/coingecko_webscraper.py
 
       - name: Stop Standalone-Chrome docker container
         run: docker stop $(docker ps -q) 
